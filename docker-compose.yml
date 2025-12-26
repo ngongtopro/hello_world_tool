@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  hello-world-tool:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hello-world-tool
+    ports:
+      - "5010:5010"
+    restart: unless-stopped
+    networks:
+      - tool-network
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5010')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+networks:
+  tool-network:
+    driver: bridge
